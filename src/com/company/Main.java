@@ -13,7 +13,7 @@ public class Main implements ActionListener
     public static Main flappyBird;
     public final int WIDTH = 1200, HEIGHT = 800;
     public ArrayList<Rectangle> columns;
-    public Random rand;
+    public Random random;
     public Rectangle bird;
     public Class renderer;
     //ticks and yMotion used from a reference website
@@ -26,7 +26,7 @@ public class Main implements ActionListener
         JFrame jframe = new JFrame();
         Timer timer = new Timer(20, this);
         renderer = new Class();
-        rand = new Random();
+        random = new Random();
         jframe.add(renderer);
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.setSize(WIDTH, HEIGHT);
@@ -61,7 +61,7 @@ public class Main implements ActionListener
     public void addColumn(boolean start) {
         int space = 290;
         int width = 100;
-        int height = 50 + rand.nextInt(290);
+        int height = 50 + random.nextInt(290);
 
         if (start)
         {
