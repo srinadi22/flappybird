@@ -126,11 +126,11 @@ public class Main implements ActionListener
 
 
     public void repaint(Graphics g){
-        g.setColor(Color.blue);
+        g.setColor(new Color(184, 221, 245));
         g.fillRect(0,0, WIDTH, HEIGHT);
-        g.setColor(Color.ORANGE);
+        g.setColor(new Color(82, 66, 47));
         g.fillRect(0, HEIGHT-120, WIDTH, 120);
-        g.setColor(Color.green);
+        g.setColor(new Color(3, 33, 7));
         g.fillRect(0, HEIGHT-120, WIDTH, 20);
         g.setColor(Color.pink);
         g.fillRect(bird.x, bird.y, bird.width, bird.height);
