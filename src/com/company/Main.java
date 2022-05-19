@@ -31,7 +31,7 @@ public class Main implements ActionListener
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.setSize(WIDTH, HEIGHT);
         jframe.setResizable(false);
-        jframe.setTitle("Flappy Bird");
+        jframe.setTitle("Flappy Bird Game");
         jframe.setVisible(true);
         bird = new Rectangle(WIDTH/2-10, HEIGHT/2-10, 20, 20);
 
