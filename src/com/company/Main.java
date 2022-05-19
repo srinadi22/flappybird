@@ -59,15 +59,15 @@ public class Main implements ActionListener
     }
 
     public void addColumn(boolean start) {
-        int space = 300;
+        int space = 290;
         int width = 100;
-        int height = 50 + rand.nextInt(300);
+        int height = 50 + rand.nextInt(290);
 
         if (start)
         {
             //mathematical code and concepts built upon from resources
-            columns.add(new Rectangle(WIDTH + width + columns.size()*300, HEIGHT - height - 120, width, height));
-            columns.add(new Rectangle(WIDTH + width + (columns.size() - 1)*300, 0, width, HEIGHT - height - space));
+            columns.add(new Rectangle(WIDTH + width + columns.size()*290, HEIGHT - height - 120, width, height));
+            columns.add(new Rectangle(WIDTH + width + (columns.size() - 1)*290, 0, width, HEIGHT - height - space));
         }
         else {
             columns.add(new Rectangle(columns.get(columns.size() - 1).x + 600, HEIGHT - height - 120, width, height));
