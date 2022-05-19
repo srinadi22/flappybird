@@ -78,7 +78,7 @@ public class Main implements ActionListener
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        int speed = 9;
+        int speed = 8;
         ticks++;
 
         for (int i = 0; i < columns.size(); i++) {
