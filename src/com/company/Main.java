@@ -12,16 +12,14 @@ public class Main implements ActionListener
 {
     public static Main flappyBird;
     public final int WIDTH = 1200, HEIGHT = 800;
-
-    public Class renderer;
-
+    public ArrayList<Rectangle> columns;
+    public Random rand;
     public Rectangle bird;
-
+    public Class renderer;
+    //ticks and yMotion used from a reference website
     public int ticks, yMotion;
 
-    public ArrayList<Rectangle> columns;
 
-    public Random rand;
 
     public Main()
     {
@@ -33,22 +31,30 @@ public class Main implements ActionListener
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.setSize(WIDTH, HEIGHT);
         jframe.setResizable(false);
-        jframe.setTitle("Flappy Bird Game");
+        jframe.setTitle("Flappy Bird");
         jframe.setVisible(true);
         bird = new Rectangle(WIDTH/2-10, HEIGHT/2-10, 20, 20);
 
         columns = new ArrayList<Rectangle>();
 
-
-
-        addColumn(true);
-        addColumn(true);
-        addColumn(true);
-        addColumn(true);
+        for (int i = 0; i < 4; i++) {
+            addColumn(true);
+        }
 
 
         timer.start();
 
+
+    }
+
+    public static void main(String[] args) {
+        // write your code here
+        flappyBird = new Main();
+    }
+
+    public void paintColumn(Graphics g, Rectangle column) {
+        g.setColor(Color.green.darker());
+        g.fillRect(column.x, column.y, column.width, column.height);
 
     }
 
@@ -59,6 +65,7 @@ public class Main implements ActionListener
 
         if (start)
         {
+            //mathematical code and concepts built upon from resources
             columns.add(new Rectangle(WIDTH + width + columns.size()*300, HEIGHT - height - 120, width, height));
             columns.add(new Rectangle(WIDTH + width + (columns.size() - 1)*300, 0, width, HEIGHT - height - space));
         }
@@ -70,12 +77,8 @@ public class Main implements ActionListener
 
     }
 
-    public void paintColumn(Graphics g, Rectangle column) {
-        g.setColor(Color.green.darker());
-        g.fillRect(column.x, column.y, column.width, column.height);
 
-    }
-
+    //mathematical calculations for this method built upon resources
     @Override
     public void actionPerformed(ActionEvent e) {
         int speed = 8;
@@ -107,13 +110,14 @@ public class Main implements ActionListener
 
         bird.y += yMotion;
 
-        /*for (Rectangle column : columns ) {
+        //still working on this
+        for (Rectangle column : columns ) {
             if (column.intersects(bird)) {
                // gameOver = true;
             }
         }
 
-         */
+
 
         renderer.repaint();
 
@@ -136,10 +140,7 @@ public class Main implements ActionListener
 
     }
 
-    public static void main(String[] args) {
-	// write your code here
-        flappyBird = new Main();
-    }
+
 
 
 
