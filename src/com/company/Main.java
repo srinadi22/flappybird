@@ -5,19 +5,24 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Main implements ActionListener
+public class Main implements ActionListener, MouseListener
 {
     public static Main flappyBird;
-    public final int WIDTH = 1200, HEIGHT = 800;
+    public final int WIDTH = 900, HEIGHT = 750;
     public ArrayList<Rectangle> columns;
     public Random random;
     public Rectangle bird;
     public Class renderer;
     //ticks and yMotion used from a reference website
     public int ticks, yMotion;
+    public int points;
+    public boolean gameStarted;
+    public boolean gameEnded;
 
 
 
@@ -30,10 +35,11 @@ public class Main implements ActionListener
         jframe.add(renderer);
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.setSize(WIDTH, HEIGHT);
-        jframe.setResizable(false);
+        jframe.addMouseListener(this);
+        jframe.setResizable(true);
         jframe.setTitle("Flappy Bird Game");
         jframe.setVisible(true);
-        bird = new Rectangle(WIDTH/2-10, HEIGHT/2-10, 20, 20);
+        bird = new Rectangle(WIDTH/2-15, HEIGHT/2-15, 20, 20);
 
         columns = new ArrayList<Rectangle>();
 
@@ -47,16 +53,7 @@ public class Main implements ActionListener
 
     }
 
-    public static void main(String[] args) {
-        // write your code here
-        flappyBird = new Main();
-    }
 
-    public void paintColumn(Graphics g, Rectangle column) {
-        g.setColor(Color.green.darker());
-        g.fillRect(column.x, column.y, column.width, column.height);
-
-    }
 
     public void addColumn(boolean start) {
         int space = 290;
@@ -77,6 +74,36 @@ public class Main implements ActionListener
 
     }
 
+    public void paintColumn(Graphics g, Rectangle column) {
+        g.setColor(Color.green.darker());
+        g.fillRect(column.x, column.y, column.width, column.height);
+
+    }
+
+    public void upMotion() {
+        if (gameEnded) {
+            bird = new Rectangle(WIDTH/2-15, HEIGHT/2-15, 20, 20);
+            columns.clear();
+            points = 0;
+            yMotion = 0;
+
+            for (int i = 0; i < 4; i++) {
+                addColumn(true);
+            }
+            gameEnded = false;
+        }
+
+
+
+        if (!gameStarted) {
+            gameStarted = true;
+        } else if (!gameEnded) {
+            if (yMotion > 0) {
+                yMotion = 0;
+            }
+            yMotion -= 10;
+        }
+    }
 
     //mathematical calculations for this method built upon resources
     @Override
@@ -84,37 +111,55 @@ public class Main implements ActionListener
         int speed = 8;
         ticks++;
 
-        for (int i = 0; i < columns.size(); i++) {
-            Rectangle column = columns.get(i);
-            column.x -= speed;
+        if (gameStarted) {
+            for (int i = 0; i < columns.size(); i++) {
+                Rectangle column = columns.get(i);
+                column.x -= speed;
 
-        }
-        if (ticks % 2 == 0 && yMotion < 15) {
-            yMotion += 2;
-        }
+            }
+            if (ticks % 2 == 0 && yMotion < 15) {
+                yMotion += 2;
+            }
 
-        for (int i = 0; i < columns.size(); i++) {
-            Rectangle column = columns.get(i);
-            if (column.x + column.width < 0) {
-                columns.remove(column);
+            for (int i = 0; i < columns.size(); i++) {
+                Rectangle column = columns.get(i);
+                if (column.x + column.width < 0) {
+                    columns.remove(column);
 
-              //  addColumn(true);
-                //change to false and test
-                if (column.y == 0) {
-                    addColumn(true);
+                    //  addColumn(true);
+                    //change to false and test
+                    if (column.y == 0) {
+                        addColumn(true);
+                    }
+
                 }
 
             }
+            bird.y += yMotion;
 
-        }
 
-        bird.y += yMotion;
-
-        //still working on this
-        for (Rectangle column : columns ) {
-            if (column.intersects(bird)) {
-               // gameOver = true;
+            //still working on this
+            for (Rectangle column : columns) {
+                if (column.intersects(bird)) {
+                    gameEnded = true;
+                    bird.x = column.x - bird.width;
+                }
+            /*if (bird.y > HEIGHT - 120 || bird.y < 0) {
+                bird.y = HEIGHT - 120;
+                gameOver = true;
             }
+
+             */
+            }
+
+            if (bird.y > HEIGHT - 120 || bird.y < 0) {
+                gameEnded = true;
+            }
+            if (gameEnded) {
+                bird.y = HEIGHT - 120 - bird.height;
+            }
+
+
         }
 
 
@@ -124,8 +169,8 @@ public class Main implements ActionListener
     }
 
 
-
     public void repaint(Graphics g){
+
         g.setColor(new Color(184, 221, 245));
         g.fillRect(0,0, WIDTH, HEIGHT);
         g.setColor(new Color(82, 66, 47));
@@ -137,12 +182,54 @@ public class Main implements ActionListener
         for (Rectangle column : columns) {
             paintColumn(g, column);
         }
+        g.setColor(Color.red);
+        g.setFont(new Font("Arial", 1, 100));
+
+        if (!gameStarted) {
+            g.drawString("Click", 75, HEIGHT / 2 - 40);
+        }
+
+
+        if (gameEnded) {
+            g.drawString("Game Over :(", 100, HEIGHT / 2 - 40);
+        }
+
+
+
 
     }
 
 
 
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        upMotion();
+    }
 
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
+
+    public static void main(String[] args) {
+        // write your code here
+        flappyBird = new Main();
+    }
 
 }
 
