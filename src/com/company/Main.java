@@ -23,6 +23,9 @@ public class Main implements ActionListener, MouseListener
     public int points;
     public boolean gameStarted;
     public boolean gameEnded;
+    public int counter;
+    public int columnCount;
+    public int pastScore = 0;
 
 
 
@@ -36,17 +39,16 @@ public class Main implements ActionListener, MouseListener
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.setSize(WIDTH, HEIGHT);
         jframe.addMouseListener(this);
-        jframe.setResizable(true);
+        jframe.setResizable(false);
         jframe.setTitle("Flappy Bird Game");
         jframe.setVisible(true);
         bird = new Rectangle(WIDTH/2-15, HEIGHT/2-15, 20, 20);
 
         columns = new ArrayList<Rectangle>();
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 10; i++) {
             addColumn(true);
         }
-
 
         timer.start();
 
@@ -60,6 +62,7 @@ public class Main implements ActionListener, MouseListener
         int width = 100;
         int height = 50 + random.nextInt(290);
 
+        columnCount++;
         if (start)
         {
             //mathematical code and concepts built upon from resources
@@ -87,13 +90,11 @@ public class Main implements ActionListener, MouseListener
             points = 0;
             yMotion = 0;
 
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 10; i++) {
                 addColumn(true);
             }
             gameEnded = false;
         }
-
-
 
         if (!gameStarted) {
             gameStarted = true;
@@ -137,28 +138,30 @@ public class Main implements ActionListener, MouseListener
             }
             bird.y += yMotion;
 
-
-            //still working on this
-            for (Rectangle column : columns) {
-                if (column.intersects(bird)) {
-                    gameEnded = true;
-                    bird.x = column.x - bird.width;
-                }
-            /*if (bird.y > HEIGHT - 120 || bird.y < 0) {
-                bird.y = HEIGHT - 120;
-                gameOver = true;
-            }
-
-             */
-            }
-
             if (bird.y > HEIGHT - 120 || bird.y < 0) {
                 gameEnded = true;
-            }
-            if (gameEnded) {
-                bird.y = HEIGHT - 120 - bird.height;
+                pastScore = counter;
+                columnCount = 0;
+                counter = 0;
             }
 
+
+            for (Rectangle column : columns) {
+                if (column.intersects(bird) && !gameEnded) {
+                    gameEnded = true;
+                    bird.x = column.x - bird.width;
+                    pastScore = counter;
+                    columnCount = 0;
+                    counter = 0;
+                } else if (bird.x > column.getMaxX() && !gameEnded) {
+                    counter = columnCount - 9;
+                }
+            }
+
+            if (gameEnded) {
+                bird.y = HEIGHT - 120 - bird.height;
+                columnCount = 0;
+            }
 
         }
 
@@ -179,22 +182,32 @@ public class Main implements ActionListener, MouseListener
         g.fillRect(0, HEIGHT-120, WIDTH, 20);
         g.setColor(Color.pink);
         g.fillRect(bird.x, bird.y, bird.width, bird.height);
+
         for (Rectangle column : columns) {
             paintColumn(g, column);
         }
-        g.setColor(Color.red);
-        g.setFont(new Font("Arial", 1, 100));
+        g.setFont(new Font("Arial", 1, 25));
+        g.setColor(Color.WHITE);
+        g.drawString("Score: " + counter, WIDTH-170, HEIGHT-65);
+
+        g.setFont(new Font("Arial", 1, 80));
 
         if (!gameStarted) {
-            g.drawString("Click", 75, HEIGHT / 2 - 40);
+            g.setColor(Color.black);
+            g.drawString("Click to start game", 75, HEIGHT / 2 - 100);
         }
 
 
         if (gameEnded) {
+            g.setColor(Color.red.darker());
             g.drawString("Game Over :(", 100, HEIGHT / 2 - 40);
+            g.setColor(Color.blue.darker());
+            g.setFont(new Font("Arial", 1, 30));
+            g.drawString("Your Score: " + pastScore, 105, HEIGHT / 2 );
+            g.setColor(Color.black);
+            g.setFont(new Font("Arial", 1, 20));
+            g.drawString("Click to try again", 105, HEIGHT / 2 + 30);
         }
-
-
 
 
     }
