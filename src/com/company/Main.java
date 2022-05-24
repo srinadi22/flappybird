@@ -26,6 +26,7 @@ public class Main implements ActionListener, MouseListener
     public int counter;
     public int columnCount;
     public int pastScore = 0;
+    public boolean beepOnCrash = false;
 
 
 
@@ -113,6 +114,7 @@ public class Main implements ActionListener, MouseListener
         ticks++;
 
         if (gameStarted) {
+            beepOnCrash = false;
             for (int i = 0; i < columns.size(); i++) {
                 Rectangle column = columns.get(i);
                 column.x -= speed;
@@ -161,7 +163,22 @@ public class Main implements ActionListener, MouseListener
             if (gameEnded) {
                 bird.y = HEIGHT - 120 - bird.height;
                 columnCount = 0;
+                if (beepOnCrash == false) {
+                    for (int i = 0; i <= 6; i++) {
+                        Toolkit.getDefaultToolkit().beep();
+                        try {
+                            Thread.sleep(200);
+                        } catch (InterruptedException interruptedException) {
+                            interruptedException.printStackTrace();
+                        }
+
+
+                    }
+                    beepOnCrash = true;
+                }
+
             }
+
 
         }
 
@@ -217,6 +234,10 @@ public class Main implements ActionListener, MouseListener
     @Override
     public void mouseClicked(MouseEvent e) {
         upMotion();
+        Toolkit.getDefaultToolkit().beep();
+
+
+
     }
 
     @Override
